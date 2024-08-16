@@ -26,6 +26,14 @@ namespace Diary.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult Create(DiaryEntry obj)
+        {
+            Console.WriteLine($"Adding {obj}...");
+            _db.DiaryEntries.Add(obj); //Adds the new diary entry to the database
+            _db.SaveChanges(); // Saves the changes to the database
+            return RedirectToAction("Index");
+        }
     }
 }
 
