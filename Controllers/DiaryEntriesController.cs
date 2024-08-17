@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Diary.Models;
+using System.Diagnostics.Metrics;
 
 namespace Diary.Controllers
 {
@@ -29,10 +30,20 @@ namespace Diary.Controllers
         [HttpPost]
         public IActionResult Create(DiaryEntry obj)
         {
-            Console.WriteLine($"Adding {obj}...");
-            _db.DiaryEntries.Add(obj); //Adds the new diary entry to the database
-            _db.SaveChanges(); // Saves the changes to the database
-            return RedirectToAction("Index");
+            // Server-side validation
+            if(obj !=null && obj.Title.Length < 3)
+            {
+                ModelState.AddModelError("Title", "Title too short");
+            }
+            // only if the data is valid 
+            if(ModelState.IsValid)
+            {
+                _db.DiaryEntries.Add(obj); //Adds the new diary entry to the database
+                _db.SaveChanges(); // Saves the changes to the database
+                return RedirectToAction("Index");
+            }
+            return View(obj);
+           
         }
     }
 }
