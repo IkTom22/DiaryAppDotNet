@@ -44,7 +44,7 @@ namespace Diary.Controllers
             }
             return View(obj);
         }
-        
+        [HttpGet] // this is not needed but just learning porpose
         public IActionResult Edit(int? id)
         {
             if(id==null || id==0)
@@ -76,6 +76,30 @@ namespace Diary.Controllers
             }
             return View(obj);
         }
+
+        [HttpGet] 
+        public IActionResult Delete(int? id)
+        {
+            if(id ==null || id == 0)
+            {
+                return NotFound();
+            }
+            DiaryEntry? diaryEntry = _db.DiaryEntries.Find(id);
+            if(diaryEntry == null)
+            {
+                return NotFound();
+            } 
+        
+            return View(diaryEntry);
+        }
+        [HttpPost] 
+        public IActionResult Delete(DiaryEntry obj)
+        {
+            _db.DiaryEntries.Remove(obj); // Remove the diary entry from db
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+           
     }
 }
 
